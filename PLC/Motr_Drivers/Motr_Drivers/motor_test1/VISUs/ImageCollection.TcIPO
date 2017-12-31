@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <ImagePool Name="ImageCollection" Id="{eadbbd74-73b4-473e-8b51-6e85f2c90902}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="ImagePoolObject">
+          <v n="UniqueIdGenerator">"8"</v>
+          <l n="BitmapPool" t="ArrayList" cet="ImagePoolItem">
+            <o>
+              <v n="BitmapID">"0"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|M:\My Documents\WS2015\Project\PLC\Motr_Drivers\Welcome1080.png"</v>
+              <v n="ItemID">3</v>
+            </o>
+            <o>
+              <v n="BitmapID">"logo"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|M:\My Documents\WS2015\Project\PLC\Motr_Drivers\logo.PNG"</v>
+              <v n="ItemID">4</v>
+            </o>
+            <o>
+              <v n="BitmapID">""</v>
+              <v n="FileID">""</v>
+              <v n="ItemID">5</v>
+            </o>
+          </l>
+          <v n="GuidInit">{e9253416-e919-4903-974f-9151f3b22531}</v>
+          <v n="GuidReInit">{47afe01c-d437-44a6-9a9f-cf51e5397186}</v>
+          <v n="GuidExitX">{6c4a8201-f698-40c7-aadb-f13bb18e9ca8}</v>
+          <v n="ValidIds">true</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="Boolean">System.Boolean</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="ImagePoolItem">{215b2719-0347-4e4d-ba85-8bcd66946f66}</Type>
+        <Type n="ImagePoolObject">{bb0b9044-714e-4614-ad3e-33cbdf34d16b}</Type>
+        <Type n="Int32">System.Int32</Type>
+        <Type n="String">System.String</Type>
+      </TypeList>
+    </XmlArchive>
+  </ImagePool>
+</TcPlcObject>

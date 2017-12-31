@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <POU Name="allgemein" Id="{1472ac25-fa64-47dd-9a69-a0116af0f03d}">
+    <Declaration><![CDATA[PROGRAM allgemein
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*safe the min and max value of the force*)
+IF maxForceValuePos < acutalForceValue THEN
+	maxForceValuePos := acutalForceValue;
+END_IF
+IF maxForceValueNeg > acutalForceValue THEN
+	maxForceValueNeg := acutalForceValue;
+END_IF]]></ST>
+    </Implementation>
+    <ObjectProperties />
+  </POU>
+</TcPlcObject>

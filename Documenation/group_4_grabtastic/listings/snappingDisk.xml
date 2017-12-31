@@ -1,0 +1,19 @@
+	31:	SCL.Crtl := 'D';
+		SCL.bSend := TRUE;
+		istate := 32;
+		
+	32:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 33;
+		END_IF
+
+	33:	IF waitToLongForRespond.Q THEN
+			istate := 31;
+			END_IF
+		IF respondD.Q1 THEN //Move Down
+			respondD.RESET := TRUE;
+			respondD.SET1 := FALSE;
+			bLoaded := TRUE;
+			istate := 35;
+		END_IF

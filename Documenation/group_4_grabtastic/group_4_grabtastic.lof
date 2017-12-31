@@ -1,0 +1,57 @@
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces System overview}}{6}{figure.caption.12}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Complete assembly}}{7}{figure.caption.13}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Top and bottom plate}}{8}{figure.caption.14}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Frame side and top view}}{8}{figure.caption.15}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Mounters for linear axis and limit switch}}{9}{figure.caption.16}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Mounting for the \acs {PCB}}}{10}{figure.caption.17}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Rackbar}}{10}{figure.caption.18}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Motor frame}}{11}{figure.caption.19}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Mechanical assembly}}{12}{figure.caption.20}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Snap connector}}{13}{figure.caption.22}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Dividing into a finite number of elements}}{17}{figure.caption.23}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Attached object and loads}}{18}{figure.caption.24}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Displaced snapper}}{19}{figure.caption.25}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Simulation result}}{20}{figure.caption.26}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces System Overview}}{21}{figure.caption.27}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Schematic of power, \acs {RS232} and strain gauge}}{23}{figure.caption.28}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Test of the strain gauge}}{25}{figure.caption.29}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces \acs {RS232} telegram scope}}{26}{figure.caption.30}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces DRV8711 layout}}{28}{figure.caption.31}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Charge pump and \acs {VCP}}}{30}{figure.caption.32}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces \acs {SPI} send configuration}}{31}{figure.caption.33}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces \acs {SPI} get status}}{32}{figure.caption.34}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces DRV8711 H-Bridges Voltage and motor current}}{33}{figure.caption.35}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Switch without capacitor}}{34}{figure.caption.36}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Switch with capacitor}}{34}{figure.caption.37}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Emergency and limit switch schematic}}{35}{figure.caption.38}
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Bottom and top \acs {PCB} layout}}{37}{figure.caption.40}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Rendered PCB Layout}}{38}{figure.caption.41}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Flowchart of pick and drop cycle}}{41}{figure.caption.42}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Welcome screen}}{42}{figure.caption.43}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Automatic mode}}{43}{figure.caption.44}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Top and bottom view of the used atmel board}}{46}{figure.caption.46}
+\contentsline {figure}{\numberline {7.2}{\ignorespaces ASF library}}{47}{figure.caption.47}
+\contentsline {figure}{\numberline {7.3}{\ignorespaces UML Diagram \acs {uC}}}{51}{figure.caption.51}
+\contentsline {figure}{\numberline {7.4}{\ignorespaces included header files}}{52}{figure.caption.52}
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Called functions \acs {uC}}}{53}{figure.caption.53}
+\contentsline {figure}{\numberline {7.6}{\ignorespaces DRV8711 \acs {PCB} Registers}}{54}{figure.caption.54}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Mechanic assembly}}{59}{figure.caption.55}
+\contentsline {figure}{\numberline {8.2}{\ignorespaces Finished \acs {Repository} top view}}{60}{figure.caption.56}
+\contentsline {figure}{\numberline {8.3}{\ignorespaces Finished \acs {Repository} side view}}{61}{figure.caption.57}
+\contentsline {figure}{\numberline {8.4}{\ignorespaces Finished electronic parts}}{62}{figure.caption.58}
+\contentsline {figure}{\numberline {8.5}{\ignorespaces Force measurement drop cycle}}{63}{figure.caption.59}
+\contentsline {figure}{\numberline {8.6}{\ignorespaces Force measurement pick cycle}}{64}{figure.caption.60}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

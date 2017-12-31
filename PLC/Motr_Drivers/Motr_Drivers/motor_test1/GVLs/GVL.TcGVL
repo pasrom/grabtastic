@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <GVL Name="GVL" Id="{41f56d6c-108d-4557-9833-2c858d7ddd90}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	BuffTX: ComBuffer;
+	BuffRX: ComBuffer;
+	acutalForceValue: INT;
+	globalForceValueArrived: BOOL;
+	respondOfORder: STRING;
+	(*errors*)
+	globalErrorDetect: BOOL :=FALSE;
+	globalErrorFromUC:STRING;
+	posAxisZ: INT;
+	respondI : SR;
+	respondD : SR;
+	respondH : SR;
+	respondP : SR;
+	respondOK : SR;
+	respondStartetUp : SR;
+	emergencyStopToMuchForce : SR;
+	errorNoSignalFromUc : SR;
+	motorXYNoPower : SR;
+	unequalLoadThanExpected : SR;
+	zAxisNotMoving : SR;
+	cycleFinished : BOOL;
+	counterSerialCom : UDINT;
+	(*values for visu*)
+	maxForceValuePos : INT;
+	maxForceValueNeg : INT;
+	(*Function declaration for the stepper Motor control*)
+	axisX, axisY : AXIS_REF;
+	powerX, powerY : MC_Power;
+	resetX, resetY : MC_Reset;
+	homeX, homeY : MC_Home;
+	moveAbsX, moveAbsY, moveAbsNewY : MC_MoveAbsolute;
+	buffermoveAbsY: MC_BufferMode := MC_Aborting;
+	posAxisX, posAxisY: MC_ReadActualPosition;
+	SCL : SerialCom;
+	(* read status of the motors x and y *)
+	readInfoAxisX, readInfoAxisY : MC_ReadStatus;
+	(*for the VISU*)
+	realVisuPosX: REAL;
+	realVisuPosY: REAL;
+	intVisuPosZ: INT;
+	realVisuDiskX: REAL;
+	realVisuDiskY: REAL;
+	(* state of the programm *)
+	iState: INT; //statemachine from the Programm
+	(* boolsche variablen *)
+	bLoaded: BOOL := FALSE;
+	bEnable : BOOL := FALSE;
+	bReset : BOOL := FALSE;	
+	bEmergencyPressed AT %I* : BOOL;
+	bStartViewPressed : BOOL := FALSE;
+	(* errer variables*)
+	errorOccurd : BOOL;
+	(* other functiosn *)
+	waitWithEnable: TOF; //TOF  after emergency was reseted
+	noSiganlFromU: TOF; //TOF  after emergency was reseted
+	rTrigStartCycle:r_trig;
+	rTrigStartViewPressed:r_trig;
+	fTrigReset: f_trig;
+	waitToLongForRespond : TON;
+	setError : SR;
+	NotHomed :SR;
+	(*Positions from the Manipulator*)
+	posHomeVelocityX: LREAL := 50.0;
+	posHomeVelocityY: LREAL := 50.0;
+	posRepositoryVelocityX: LREAL :=50.0;
+	posRepositoryVelocityY: LREAL := 50.0;
+	posPrepositioningVelocityX: LREAL := 50.0;
+	posPrepositioningVelocityY: LREAL := 50.0;
+	(*Positions from the Manipulator*)
+	posHomeX: LREAL := 15.0;
+	posHomeY: LREAL := 400.0;
+	posRepositoryX: LREAL :=134.5;
+	posRepositoryY: LREAL := 0.2;
+	posPrepositioningX: LREAL := posRepositoryX;
+	posPrepositioningY: LREAL := 125;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

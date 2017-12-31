@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <GlobalTextList Name="GlobalTextList" Id="{876b21df-4296-4c29-8e1b-17f99fa37e2d}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="GlobalTextListObject">
+          <l n="TextList" t="ArrayList" cet="TextListRow">
+            <o>
+              <v n="TextID">"41"</v>
+              <v n="TextDefault">" $$R $$N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"42"</v>
+              <v n="TextDefault">" $/R $/N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"46"</v>
+              <v n="TextDefault">" $A%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"40"</v>
+              <v n="TextDefault">" $R $N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"39"</v>
+              <v n="TextDefault">" $R$N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"45"</v>
+              <v n="TextDefault">" %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"43"</v>
+              <v n="TextDefault">" /R /N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"44"</v>
+              <v n="TextDefault">" \R \N %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"47"</v>
+              <v n="TextDefault">""$0xA"%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"49"</v>
+              <v n="TextDefault">"$#A%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"50"</v>
+              <v n="TextDefault">"$0x0A%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"48"</v>
+              <v n="TextDefault">"$A%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"5"</v>
+              <v n="TextDefault">"%.0f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"4"</v>
+              <v n="TextDefault">"%.1f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"17"</v>
+              <v n="TextDefault">"%.2f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"3"</v>
+              <v n="TextDefault">"%.9f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"16"</v>
+              <v n="TextDefault">"%f"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"15"</v>
+              <v n="TextDefault">"%i"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"20"</v>
+              <v n="TextDefault">"%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"38"</v>
+              <v n="TextDefault">"%s $R$N"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"33"</v>
+              <v n="TextDefault">"Automatic Mode"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"21"</v>
+              <v n="TextDefault">"continuously run"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"53"</v>
+              <v n="TextDefault">"Continuously Run"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"54"</v>
+              <v n="TextDefault">"Cylce Time [s]"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"55"</v>
+              <v n="TextDefault">"Cylce Time [s]:"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"13"</v>
+              <v n="TextDefault">"Dauverlauf"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"36"</v>
+              <v n="TextDefault">"Debug Messages"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"1"</v>
+              <v n="TextDefault">"Enable"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"14"</v>
+              <v n="TextDefault">"ERROR"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"37"</v>
+              <v n="TextDefault">"Error Messages"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"22"</v>
+              <v n="TextDefault">"Force / measuring points"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"23"</v>
+              <v n="TextDefault">"Force / measuring points Diagram"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"51"</v>
+              <v n="TextDefault">"Force / measuring points Diagram Drop Cycle"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"52"</v>
+              <v n="TextDefault">"Force / measuring points Diagram Pick Cycle"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"30"</v>
+              <v n="TextDefault">"Force Value in mN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"26"</v>
+              <v n="TextDefault">"Force Values"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"25"</v>
+              <v n="TextDefault">"ForceValues"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"8"</v>
+              <v n="TextDefault">"Load Sim"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"31"</v>
+              <v n="TextDefault">"max Force Value in mN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"24"</v>
+              <v n="TextDefault">"measuring points"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"32"</v>
+              <v n="TextDefault">"min Force Value in mN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"2"</v>
+              <v n="TextDefault">"mN"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"11"</v>
+              <v n="TextDefault">"Position X"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"18"</v>
+              <v n="TextDefault">"Position X in mm"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"12"</v>
+              <v n="TextDefault">"Position Y"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"19"</v>
+              <v n="TextDefault">"Position Y in mm"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"29"</v>
+              <v n="TextDefault">"Position Z in mm"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"0"</v>
+              <v n="TextDefault">"Reference"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"7"</v>
+              <v n="TextDefault">"Reset"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"34"</v>
+              <v n="TextDefault">"Start Automatik"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"6"</v>
+              <v n="TextDefault">"Start Cycle"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"27"</v>
+              <v n="TextDefault">"Status / Error Messages"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"35"</v>
+              <v n="TextDefault">"Status Messages"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"9"</v>
+              <v n="TextDefault">"X"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"10"</v>
+              <v n="TextDefault">"Y"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"28"</v>
+              <v n="TextDefault">"Z"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+          </l>
+          <l n="Languages" t="ArrayList" />
+          <v n="GuidInit">{b1d5e8a3-99c3-4166-afcf-82dd6a493d1b}</v>
+          <v n="GuidReInit">{67dca418-b0da-4d4a-a1a2-e0d34e931547}</v>
+          <v n="GuidExitX">{abab2c4f-8693-4a17-be88-04e715dd76d3}</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="GlobalTextListObject">{63784cbb-9ba0-45e6-9d69-babf3f040511}</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="String">System.String</Type>
+        <Type n="TextListRow">{53da1be7-ad25-47c3-b0e8-e26286dad2e0}</Type>
+      </TypeList>
+    </XmlArchive>
+  </GlobalTextList>
+</TcPlcObject>

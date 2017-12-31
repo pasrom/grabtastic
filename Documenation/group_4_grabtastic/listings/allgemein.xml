@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+    <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.6.0" creationDateTime="2015-12-12T13:32:27.246457" />
+    <contentHeader name="motor_test1" modificationDateTime="2015-12-12T13:32:27.2494689">
+        <coordinateInfo>
+            <fbd>
+                <scaling x="1" y="1" />
+            </fbd>
+            <ld>
+                <scaling x="1" y="1" />
+            </ld>
+            <sfc>
+                <scaling x="1" y="1" />
+            </sfc>
+        </coordinateInfo>
+        <addData>
+            <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+                <ProjectInformation />
+            </data>
+        </addData>
+    </contentHeader>
+    <types>
+        <dataTypes />
+        <pous>
+            <pou name="allgemein" pouType="program">
+                <interface />
+                <body>
+                    <ST>
+                        <xhtml xmlns="http://www.w3.org/1999/xhtml">(*safe the min and max value of the force*)
+                            IF maxForceValuePos &lt; acutalForceValue THEN
+                            maxForceValuePos := acutalForceValue;
+                            END_IF
+                            IF maxForceValueNeg &gt; acutalForceValue THEN
+                            maxForceValueNeg := acutalForceValue;
+                            END_IF</xhtml>
+                    </ST>
+                </body>
+                <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                        <ObjectId>1472ac25-fa64-47dd-9a69-a0116af0f03d</ObjectId>
+                    </data>
+                </addData>
+            </pou>
+        </pous>
+    </types>
+    <instances>
+        <configurations />
+    </instances>
+    <addData>
+        <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+            <ProjectStructure>
+                <Object Name="allgemein" ObjectId="1472ac25-fa64-47dd-9a69-a0116af0f03d" />
+            </ProjectStructure>
+        </data>
+    </addData>
+</project>

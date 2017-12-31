@@ -1,0 +1,30 @@
+	125:	IF  rTrigStartCycle.Q OR bDauerlauf THEN
+			moveAbsX.Velocity := posPrepositioningVelocityX;
+			moveAbsX.Position := posPrepositioningX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posPrepositioningVelocityY;
+			moveAbsY.Position :=posPrepositioningY;
+			moveAbsY.Execute := TRUE;
+			iState :=  130;
+			maxForceValuePos := 0;
+			maxForceValueNeg := 0;
+		END_IF
+	130:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			iState := 135;
+		END_IF
+		
+	135:	moveAbsX.Velocity := 	posRepositoryVelocityX;
+			moveAbsX.Position := 	posRepositoryX;
+			moveAbsX.Execute := 	TRUE;
+			moveAbsY.Velocity :=	posRepositoryVelocityY;
+			moveAbsY.Position :=	posRepositoryY;
+			moveAbsY.Execute := TRUE;
+			iState :=  140;
+			
+	140:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			iState :=  141;
+			END_IF

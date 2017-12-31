@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <POU Name="visu" Id="{ea3e10d6-17f9-4ff5-9f46-fd6862e1487e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM visu
+VAR
+	//stringErrorText : WSTRING; //error texts for visu
+	//stringMessageText : WSTRING;
+	//stringDebugText : WSTRING;
+	stringErrorText: ARRAY [1..20] OF STRING;
+	stringMessageText: ARRAY [1..20] OF STRING;
+	stringDebugText: ARRAY [1..20] OF STRING;
+	forceMemoryDrop: writeInArray;
+	forceMemoryPick: writeInArray;
+	zaehl: INT := 1;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[forceMemoryDrop(i_iState:= iState, i_actualForceValue:= acutalForceValue, i_bLoaded:= TRUE, io_ValueArrived:= globalForceValueArrived);
+forceMemoryPick(i_iState:= iState, i_actualForceValue:= acutalForceValue, i_bLoaded:= FALSE, io_ValueArrived:= globalForceValueArrived);
+//cycleFinished(SET1:= , RESET:= , Q1=> );
+
+(* pos of x and y for the visu*)
+IF readInfoAxisX.Status.Homed AND readInfoAxisY.Status.Homed	THEN
+realVisuPosX := posAxisX.Position * 1.5;
+realVisuPosY := (posAxisY.Position * (-1.0) + 10) *1.7;
+//realVisuPosX := ABS (realVisuPosX);
+ELSE
+realVisuPosX := 0.0;
+realVisuPosY := 0.0;	
+END_IF
+
+IF bLoaded THEN
+	realVisuDiskX := realVisuPosX; (* - posRepositoryX * 1.5;*)
+	realVisuDiskY := realVisuPosY; (*- (posRepositoryY * (-1.0) + 10) *2.0;	*)
+ELSE
+	realVisuDiskX := posRepositoryX * 1.5;
+	realVisuDiskY := (posRepositoryY * (-1.0) + 10) *2.0;
+END_IF
+
+IF iState > 3 THEN
+intVisuPosZ := (posAxisZ) *2;
+ELSE
+intVisuPosZ := 0;	
+END_IF
+
+(*prepare cycle finished*)
+
+(* visu texts *)
+
+MEMSET(ADR(stringErrorText), 0, SIZEOF(stringErrorText));
+MEMSET(ADR(stringMessageText), 0, SIZEOF(stringMessageText));
+MEMSET(ADR(stringDebugText), 0, SIZEOF(stringDebugText));
+
+zaehl := 1;
+(* error messages *)
+IF NOT readInfoAxisX.Status.Homed OR NOT readInfoAxisY.Status.Homed THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Not referenced in X/Y');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  globalErrorDetect THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Failure');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  bEmergencyPressed THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Emergency Stop');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  emergencyStopToMuchForce.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'too much Force');
+	zaehl := zaehl + 1;
+END_IF
+
+IF motorXYNoPower.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Not referenced in X/Y');	
+	zaehl := zaehl + 1;
+END_IF
+
+IF errorNoSignalFromUc.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'error connection lost to uC');
+	zaehl := zaehl + 1;
+END_IF
+
+IF unequalLoadThanExpected.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'load unequal than expected');	
+	zaehl := zaehl + 1;
+END_IF
+
+IF zAxisNotMoving.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'z-axis Error');	
+	zaehl := zaehl + 1;
+END_IF
+
+(* massage textes *)
+	zaehl := 1;
+IF acutalForceValue > -200  THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'The object is successfully dropped');
+	zaehl := zaehl + 1;
+END_IF
+
+IF acutalForceValue < -700 THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'The object is successfully grabbed');
+	zaehl := zaehl + 1;
+END_IF
+
+
+IF iState = 26 AND cycleFinished THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'Cycle successfully finished');
+	zaehl := zaehl + 1;
+END_IF
+
+(* debug messages *)
+	zaehl := 1;
+IF bLoaded THEN	
+	stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'Load');
+	zaehl := zaehl + 1;
+ELSE
+	stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'No Load');
+	zaehl := zaehl + 1;
+END_IF
+
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'State PLC: ');
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= INT_TO_STRING (iState));
+zaehl := zaehl + 1;
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'Error from uC:');
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= globalErrorFromUC);
+zaehl := zaehl + 1;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

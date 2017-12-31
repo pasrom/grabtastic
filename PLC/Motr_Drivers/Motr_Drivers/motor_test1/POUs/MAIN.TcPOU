@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <POU Name="MAIN" Id="{aa765065-2c06-4e93-a810-ab109c1868cb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR CONSTANT 
+	BufStart:INT:=  1;      // Start-Index
+ 	BufEnd:INT:=  100;   // End-Index
+END_VAR
+
+VAR
+	diX, diY AT %I* : BOOL;
+	(*boole variables*)
+	bStart :BOOL := FALSE;
+	bMoveHome : BOOL := FALSE;
+	bDauerlauf : BOOL := FALSE;
+	i: INT;
+	btest : BOOL;
+		btestZwei : bool;
+	btesDrei: BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[allgemein();
+
+posAxisX(Axis:= axisX, Enable:= TRUE , Valid=> , Busy=> , Error=> , ErrorID=> , Position=> );
+posAxisY(Axis:= axisY, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , Position=> );
+
+powerX(Axis:= axisX, Enable:= bEnable, Enable_Positive:= bEnable, Enable_Negative:= bEnable, Override:= 100, BufferMode:= , Options:= , Status=> , Busy=> , Active=> , Error=> , ErrorID=> );
+powerY(Axis:= axisY, Enable:= bEnable, Enable_Positive:= bEnable, Enable_Negative:= bEnable, Override:= 100, BufferMode:= , Options:= , Status=> , Busy=> , Active=> , Error=> , ErrorID=> );
+
+resetX(Axis:= axisX, Execute:= , Done=> , Busy=> , Error=> , ErrorID=> );
+resetY(Axis:= axisY, Execute:= , Done=> , Busy=> , Error=> , ErrorID=> );
+
+homeX(Axis:= axisX, Execute:= , Position:= 0 , HomingMode:= , BufferMode:= , Options:= , bCalibrationCam:= NOT diX, Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+homeY(Axis:= axisY, Execute:= , Position:= 0 , HomingMode:= , BufferMode:= , Options:= , bCalibrationCam:= NOT diY, Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );	
+
+moveAbsX(Axis:= axisX, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= , Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+
+moveAbsY(Axis:= axisY, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= buffermoveAbsY, Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+
+moveAbsNewY(Axis:= axisY, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= buffermoveAbsY, Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );	
+
+SCL(Crtl:= , bSend:= , ReceivedString=> , bNewString=> , bSendBusy=> , bStringReceived=> );
+	
+	rTrigStartCycle(CLK:= bStart , Q=> );
+	CASE iState OF
+		
+	0:	IF (*rTrig.Q AND *)powerX.Status AND powerY.Status THEN
+			iState := iState + 1;
+		END_IF
+
+	1:	SCL.Crtl := 'I';
+		SCL.bSend := TRUE;
+		respondOfORder := '';
+		istate := 2;
+
+	2:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			istate := 3;
+		END_IF
+
+	3:	IF waitToLongForRespond.Q THEN
+			istate := 1;
+		END_IF
+		IF respondI.Q1 THEN
+			respondI.RESET := TRUE;
+			respondI.SET1 := FALSE;
+			istate := 5;
+		END_IF	
+	
+	5:		resetX.Execute :=TRUE;
+			resetY.Execute :=TRUE;
+			iState := 10;
+		
+	10:	IF resetX.Done AND resetY.Done THEN
+			resetX.Execute := FALSE;
+			resetY.Execute := FALSE;
+			iState :=  iState + 5;
+		END_IF
+		
+	15: IF NOT readInfoAxisX.Status.Homed or NOT readInfoAxisY.Status.Homed THEN
+		homeX.Execute := TRUE;
+		homeY.Execute := TRUE;
+		iState := 20;
+		ELSE
+			iState := 21; //--> if already referenced, go home position
+		END_IF
+	20:	IF homeX.Done AND homeY.Done THEN
+			homeX.Execute := FALSE;
+			homeY.Execute := FALSE;
+			NotHomed.RESET := FALSE;
+			iState := 21;		
+		END_IF
+	21:			moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position := posHomeY;
+				moveAbsY.Execute := TRUE;
+
+			IF posAxisY.Position > posPrepositioningY THEN
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  25;
+			END_IF
+
+	25:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			iState :=  26;
+		END_IF
+		
+	(*this starts a new cycle, depending on the load*)
+	26:	IF rTrigStartCycle.Q OR bDauerlauf THEN
+			IF bLoaded THEN
+				iState :=  125;
+			ELSE
+				iState :=  27;
+			END_IF
+			respondD.RESET := TRUE;
+			respondD.SET1 := FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			respondP.RESET := TRUE;
+			respondP.SET1 := FALSE;
+			cycleFinished := FALSE;
+		END_IF				
+		
+	27:		moveAbsX.Velocity := posRepositoryVelocityX;
+			moveAbsX.Position := posRepositoryX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posRepositoryVelocityY;
+			moveAbsY.Position :=posRepositoryY;
+			moveAbsY.Execute := TRUE;
+			iState :=  28;
+			maxForceValuePos := 0;
+			maxForceValueNeg := 0;
+
+	28: 	SCL.Crtl := 'P'; // vorpositionieren
+			SCL.bSend := TRUE;
+			iState :=  29;
+		
+	29:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 30;
+		END_IF
+		
+	30:	IF waitToLongForRespond.Q THEN
+			istate := 28;
+			END_IF
+		IF 	moveAbsX.Done AND moveAbsY.Done AND respondP.Q1 THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondP.RESET := TRUE;
+			respondP.SET1 := FALSE;
+			iState := 31;
+		END_IF
+		
+	31:	SCL.Crtl := 'D';
+		SCL.bSend := TRUE;
+		istate := 32;
+		
+	32:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 33;
+		END_IF
+
+	33:	IF waitToLongForRespond.Q THEN
+			istate := 31;
+			END_IF
+		IF respondD.Q1 THEN //Move Down
+			respondD.RESET := TRUE;
+			respondD.SET1 := FALSE;
+			bLoaded := TRUE;
+			cycleFinished :=TRUE;
+			istate := 35;
+		END_IF	
+		
+	35:		IF NOT respondD.Q1 THEN
+				moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position :=posHomeY;
+				moveAbsY.Execute := TRUE;
+			IF posAxisY.Position > posPrepositioningY THEN //über dem weg drausen, dan darf er fahren
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  40;
+			END_IF
+		
+		END_IF
+	40:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			iState := 26;
+		END_IF
+		
+	125:	moveAbsX.Velocity := posPrepositioningVelocityX;
+			moveAbsX.Position := posPrepositioningX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posPrepositioningVelocityY;
+			moveAbsY.Position :=posPrepositioningY;
+			moveAbsY.Execute := TRUE;
+			iState :=  130;
+			maxForceValuePos := 0;
+			maxForceValueNeg := 0;
+			
+	130:	IF moveAbsX.Done THEN
+				moveAbsNewY.Execute:= TRUE;
+				moveAbsNewY.Velocity := posRepositoryVelocityY;
+				moveAbsNewY.Position := posRepositoryY;
+				moveAbsY.Execute:= FALSE;
+				moveAbsX.Execute:= FALSE;
+			END_IF
+			IF moveAbsNewY.Done THEN
+				iState := 140;
+		END_IF
+		
+	(*135:	moveAbsX.Velocity := 	posRepositoryVelocityX;
+			moveAbsX.Position := 	posRepositoryX;
+			moveAbsX.Execute := 	TRUE;
+			moveAbsY.Velocity :=	posRepositoryVelocityY;
+			moveAbsY.Position :=	posRepositoryY;
+			moveAbsY.Execute := TRUE;
+			iState :=  140;*)
+			
+	140:	IF 	(*moveAbsX.Done AND*) moveAbsNewY.Done THEN
+			moveAbsNewY.Execute:= FALSE;
+			iState :=  141;
+			END_IF
+			
+	141:	SCL.Crtl := 'P'; //Move Up
+			SCL.bSend := TRUE;
+			istate := 142;
+			
+	142:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 143;
+		END_IF
+
+	143:	IF waitToLongForRespond.Q THEN
+				istate := 141;
+			END_IF
+			IF respondP.Q1 THEN
+				respondP.RESET := TRUE;
+				respondP.SET1 := FALSE;
+				bLoaded := FALSE;
+				cycleFinished :=TRUE;
+				iState := 145;
+			END_IF	
+			
+	145:	SCL.Crtl := 'H'; // Home pos anfahren
+			SCL.bSend := TRUE;
+			iState :=  150;
+		
+	150:	IF NOT SCL.bSendBusy THEN
+				SCL.bSend := FALSE;
+				SCL.Crtl := '';
+				istate := 155;
+			END_IF
+
+ 	155:	moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position := posHomeY;
+				moveAbsY.Execute := TRUE;
+
+			IF posAxisY.Position > posPrepositioningY THEN
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  160;
+			END_IF
+		
+	160:	IF waitToLongForRespond.Q THEN
+				istate := 145;
+			END_IF
+			IF 	moveAbsX.Done AND moveAbsY.Done AND respondH.Q1 THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			iState :=  26;
+		END_IF
+		
+	END_CASE
+	
+	resetErrorHandling();
+	visu();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "TEST_TC_RS232", "TEST_TC_RS232.cproj", "{43478A6A-F802-4578-817E-435208BD505E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43478A6A-F802-4578-817E-435208BD505E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{43478A6A-F802-4578-817E-435208BD505E}.Debug|ARM.Build.0 = Debug|ARM
+		{43478A6A-F802-4578-817E-435208BD505E}.Release|ARM.ActiveCfg = Release|ARM
+		{43478A6A-F802-4578-817E-435208BD505E}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

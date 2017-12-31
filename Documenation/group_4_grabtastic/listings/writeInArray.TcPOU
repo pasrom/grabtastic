@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <POU Name="writeInArray" Id="{3598d6de-83da-44cc-979f-57940dfadb3a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK writeInArray
+
+VAR CONSTANT 
+	BufStart:INT:=  1;      // Start-Index
+ 	BufEnd:INT:=  100;   // End-Index
+END_VAR
+
+VAR_INPUT
+	i_iState : INT;
+	i_actualForceValue : INT;
+	i_bLoaded : BOOL;
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR
+	sTemp : INT;
+	sArrForceValue: ARRAY [BufStart..BufEnd] OF INT;
+END_VAR
+
+VAR_IN_OUT
+	io_ValueArrived : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	IF io_ValueArrived AND ((NOT i_bLoaded AND (iState = 33) AND (posAxisZ > 60 )) OR (i_bLoaded AND (iState = 143) AND (posAxisZ > 57 ))) THEN
+		sTemp := sTemp + 1;
+		IF sTemp > BufEnd THEN
+			sTemp:=1;
+		END_IF
+		sArrForceValue[sTemp] := i_actualForceValue;
+		io_ValueArrived := FALSE;		
+	END_IF
+	
+	IF	(((i_iState = 27 AND NOT i_bLoaded) OR (i_iState = 125 AND i_bLoaded)) ) THEN //delet Buffer Begin from new
+		MEMSET(ADR(sArrForceValue), 0, SIZEOF(sArrForceValue));
+		sTemp:=1;
+	END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

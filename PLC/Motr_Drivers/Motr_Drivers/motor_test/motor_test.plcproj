@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileVersion>1.0.0.0</FileVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8c02ac16-9bab-45e7-aeaa-736ca63ad2bd}</ProjectGuid>
+    <Name>motor_test</Name>
+    <ProgramVersion>3.1.0.8</ProgramVersion>
+    <Application>{106615f9-6db2-4da4-aeb4-75ccaa103df5}</Application>
+    <TypeSystem>{2fa8a27d-0ae8-44d1-b864-23ce6350472e}</TypeSystem>
+    <Implicit_Task_Info>{14676af9-9904-4724-9718-06af08f093ae}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{92d42348-29b0-42ed-963f-b0d6d383600b}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{ed242bdd-905e-4bfc-9fd9-57b5495c44b9}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{a3791737-46ae-4021-bb1a-241b50e656f5}</LibraryReferences>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="GlobalTextList.TcGTLO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DUTs" />
+    <Folder Include="GVLs" />
+    <Folder Include="VISUs" />
+    <Folder Include="POUs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="System_VisuElem3DPath">
+      <DefaultResolution>VisuElem3DPath, 3.5.4.0 (System)</DefaultResolution>
+      <Namespace>VisuElem3DPath</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+      <Parameters>
+        <Parameter xmlns="">
+          <Key>GC_POINTS_PER_POLYGON</Key>
+          <Value>100</Value>
+        </Parameter>
+      </Parameters>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemMeter">
+      <DefaultResolution>VisuElemMeter, 3.5.4.0 (System)</DefaultResolution>
+      <Namespace>VisuElemMeter</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElems">
+      <DefaultResolution>VisuElems, 3.5.4.10 (System)</DefaultResolution>
+      <Namespace>VisuElems</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemsSpecialControls">
+      <DefaultResolution>VisuElemsSpecialControls, 3.5.4.10 (System)</DefaultResolution>
+      <Namespace>VisuElemsSpecialControls</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemsWinControls">
+      <DefaultResolution>VisuElemsWinControls, 3.5.4.10 (System)</DefaultResolution>
+      <Namespace>VisuElemsWinControls</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuElemTextEditor">
+      <DefaultResolution>VisuElemTextEditor, 3.5.4.0 (System)</DefaultResolution>
+      <Namespace>VisuElemTextEditor</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="system_visuinputs">
+      <DefaultResolution>visuinputs, 3.5.4.0 (system)</DefaultResolution>
+      <Namespace>visuinputs</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="System_VisuNativeControl">
+      <DefaultResolution>VisuNativeControl, 3.5.4.0 (System)</DefaultResolution>
+      <Namespace>VisuNativeControl</Namespace>
+      <SystemLibrary>True</SystemLibrary>
+      <ResolverGuid>2717eb6a-dd07-4c66-8d8d-cacebd7b18ae</ResolverGuid>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Standard">
+      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Interfaces">
+      <DefaultResolution>Tc3_Interfaces, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Interfaces</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <LibraryReference Include="Tc2_MC2,3.3.8.0,Beckhoff Automation GmbH">
+      <Namespace>Tc2_MC2</Namespace>
+    </LibraryReference>
+    <LibraryReference Include="Tc2_SerialCom,3.3.3.0,Beckhoff Automation GmbH">
+      <Namespace>Tc2_SerialCom</Namespace>
+    </LibraryReference>
+  </ItemGroup>
+  <ProjectExtensions />
+</Project>

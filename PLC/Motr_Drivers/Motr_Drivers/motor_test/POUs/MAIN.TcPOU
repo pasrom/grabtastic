@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <POU Name="MAIN" Id="{921adec3-9538-4142-a9cc-7f60e269c50c}">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	axisX, axisY : AXIS_REF;
+	diX, diY AT %I* : BOOL;
+	bEnable : BOOL;
+	powerX, powerY : MC_Power;
+	resetX, resetY : MC_Reset;
+	homeX, homeY : MC_Home;
+	moveAbsY, moveAbsY : MC_MoveAbsolute;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <ObjectProperties />
+  </POU>
+</TcPlcObject>

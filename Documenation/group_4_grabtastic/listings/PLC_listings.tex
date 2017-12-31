@@ -1,0 +1,745 @@
+ \lstset{
+   basicstyle=\scriptsize\ttfamily,
+   keywordstyle=\bfseries\ttfamily\color{orange},
+   stringstyle=\color{green}\ttfamily,
+   commentstyle=\color{middlegray}\ttfamily,
+   emph={square}, 
+   emphstyle=\color{blue}\texttt,
+   emph={[2]root,base},
+   emphstyle={[2]\color{yac}\texttt},
+   showstringspaces=false,
+   flexiblecolumns=false,
+   tabsize=2,
+   numbers=left,
+   numberstyle=\tiny,
+   numberblanklines=false,
+   stepnumber=1,
+   numbersep=11pt,
+   xleftmargin=15pt,
+   breaklines=true
+	language=Pascal}
+	
+\subsection{Allgemein}
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Allgemein]
+
+(*safe the min and max value of the force*)
+IF maxForceValuePos < acutalForceValue THEN
+	maxForceValuePos := acutalForceValue;
+END_IF
+IF maxForceValueNeg > acutalForceValue THEN
+	maxForceValueNeg := acutalForceValue;
+END_IF
+
+\end{lstlisting}
+
+
+\subsection{Main}
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Main]
+VAR CONSTANT 
+	BufStart:INT:=  1;      // Start-Index
+ 	BufEnd:INT:=  100;   // End-Index
+END_VAR
+
+VAR
+	diX, diY AT %I* : BOOL;
+	(*boole variables*)
+	bStart :BOOL := FALSE;
+	bMoveHome : BOOL := FALSE;
+	bDauerlauf : BOOL := FALSE;
+	i: INT;
+	btest : BOOL;
+	btestZwei : bool;
+	btesDrei: BOOL;
+END_VAR
+
+posAxisX(Axis:= axisX, Enable:= TRUE , Valid=> , Busy=> , Error=> , ErrorID=> , Position=> );
+posAxisY(Axis:= axisY, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , Position=> );
+
+powerX(Axis:= axisX, Enable:= bEnable, Enable_Positive:= bEnable, Enable_Negative:= bEnable, Override:= 100, BufferMode:= , Options:= , Status=> , Busy=> , Active=> , Error=> , ErrorID=> );
+powerY(Axis:= axisY, Enable:= bEnable, Enable_Positive:= bEnable, Enable_Negative:= bEnable, Override:= 100, BufferMode:= , Options:= , Status=> , Busy=> , Active=> , Error=> , ErrorID=> );
+
+resetX(Axis:= axisX, Execute:= , Done=> , Busy=> , Error=> , ErrorID=> );
+resetY(Axis:= axisY, Execute:= , Done=> , Busy=> , Error=> , ErrorID=> );
+
+homeX(Axis:= axisX, Execute:= , Position:= 0 , HomingMode:= , BufferMode:= , Options:= , bCalibrationCam:= NOT diX, Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+homeY(Axis:= axisY, Execute:= , Position:= 0 , HomingMode:= , BufferMode:= , Options:= , bCalibrationCam:= NOT diY, Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );	
+
+moveAbsX(Axis:= axisX, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= , Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+
+moveAbsY(Axis:= axisY, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= buffermoveAbsY, Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );
+
+moveAbsNewY(Axis:= axisY, Execute:= , Position:= , Velocity:= , Acceleration:= , Deceleration:= , Jerk:= , BufferMode:= buffermoveAbsY, Options:= , Done=> , Busy=> , Active=> , CommandAborted=> , Error=> , ErrorID=> );	
+
+SCL(Crtl:= , bSend:= , ReceivedString=> , bNewString=> , bSendBusy=> , bStringReceived=> );
+	
+	rTrigStartCycle(CLK:= bStart , Q=> );
+	CASE iState OF
+		
+	0:	IF (*rTrig.Q AND *)powerX.Status AND powerY.Status THEN
+			iState := iState + 1;
+		END_IF
+
+	1:	SCL.Crtl := 'I';
+		SCL.bSend := TRUE;
+		respondOfORder := '';
+		istate := 2;
+
+	2:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			istate := 3;
+		END_IF
+
+	3:	IF waitToLongForRespond.Q THEN
+			istate := 1;
+		END_IF
+		IF respondI.Q1 THEN
+			respondI.RESET := TRUE;
+			respondI.SET1 := FALSE;
+			istate := 5;
+		END_IF	
+	
+	5:		resetX.Execute :=TRUE;
+			resetY.Execute :=TRUE;
+			iState := 10;
+		
+	10:	IF resetX.Done AND resetY.Done THEN
+			resetX.Execute := FALSE;
+			resetY.Execute := FALSE;
+			iState :=  iState + 5;
+		END_IF
+		
+	15: IF NOT readInfoAxisX.Status.Homed or NOT readInfoAxisY.Status.Homed THEN
+		homeX.Execute := TRUE;
+		homeY.Execute := TRUE;
+		iState := 20;
+		ELSE
+			iState := 21; //--> if already referenced, go home position
+		END_IF
+	20:	IF homeX.Done AND homeY.Done THEN
+			homeX.Execute := FALSE;
+			homeY.Execute := FALSE;
+			NotHomed.RESET := FALSE;
+			iState := 21;		
+		END_IF
+	21:			moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position := posHomeY;
+				moveAbsY.Execute := TRUE;
+
+			IF posAxisY.Position > posPrepositioningY THEN
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  25;
+			END_IF
+
+	25:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			iState :=  26;
+		END_IF
+		
+	(*this starts a new cycle, depending on the load*)
+	26:	IF rTrigStartCycle.Q OR bDauerlauf THEN
+			IF bLoaded THEN
+				iState :=  125;
+			ELSE
+				iState :=  27;
+			END_IF
+			respondD.RESET := TRUE;
+			respondD.SET1 := FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			respondP.RESET := TRUE;
+			respondP.SET1 := FALSE;
+			cycleFinished := FALSE;
+		END_IF				
+		
+	27:		moveAbsX.Velocity := posRepositoryVelocityX;
+			moveAbsX.Position := posRepositoryX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posRepositoryVelocityY;
+			moveAbsY.Position :=posRepositoryY;
+			moveAbsY.Execute := TRUE;
+			iState :=  28;
+			maxForceValuePos := 0;
+			maxForceValueNeg := 0;
+
+	28: 	SCL.Crtl := 'P'; // vorpositionieren
+			SCL.bSend := TRUE;
+			iState :=  29;
+		
+	29:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 30;
+		END_IF
+		
+	30:	IF waitToLongForRespond.Q THEN
+			istate := 28;
+			END_IF
+		IF 	moveAbsX.Done AND moveAbsY.Done AND respondP.Q1 THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondP.RESET := TRUE;
+			respondP.SET1 := FALSE;
+			iState := 31;
+		END_IF
+		
+	31:	SCL.Crtl := 'D';
+		SCL.bSend := TRUE;
+		istate := 32;
+		
+	32:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 33;
+		END_IF
+
+	33:	IF waitToLongForRespond.Q THEN
+			istate := 31;
+			END_IF
+		IF respondD.Q1 THEN //Move Down
+			respondD.RESET := TRUE;
+			respondD.SET1 := FALSE;
+			bLoaded := TRUE;
+			cycleFinished :=TRUE;
+			istate := 35;
+		END_IF	
+		
+	35:		IF NOT respondD.Q1 THEN
+				moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position :=posHomeY;
+				moveAbsY.Execute := TRUE;
+			IF posAxisY.Position > posPrepositioningY THEN //über dem weg drausen, dan darf er fahren
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  40;
+			END_IF
+		
+		END_IF
+	40:	IF 	moveAbsX.Done AND moveAbsY.Done THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			iState := 26;
+		END_IF
+		
+	125:	moveAbsX.Velocity := 5;
+			moveAbsX.Position := posPrepositioningX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posPrepositioningVelocityY;
+			moveAbsY.Position :=posPrepositioningY;
+			moveAbsY.Execute := TRUE;
+			iState :=  130;
+			maxForceValuePos := 0;
+			maxForceValueNeg := 0;
+			
+	130:	IF moveAbsX.Done THEN
+				moveAbsNewY.Execute:= TRUE;
+				moveAbsNewY.Velocity := posRepositoryVelocityY;
+				moveAbsNewY.Position := posRepositoryY;
+				moveAbsY.Execute:= FALSE;
+				moveAbsX.Execute:= FALSE;
+			END_IF
+			IF moveAbsNewY.Done THEN
+				iState := 140;
+		END_IF
+		
+	(*135:	moveAbsX.Velocity := 	posRepositoryVelocityX;
+			moveAbsX.Position := 	posRepositoryX;
+			moveAbsX.Execute := 	TRUE;
+			moveAbsY.Velocity :=	posRepositoryVelocityY;
+			moveAbsY.Position :=	posRepositoryY;
+			moveAbsY.Execute := TRUE;
+			iState :=  140;*)
+			
+	140:	IF 	(*moveAbsX.Done AND*) moveAbsNewY.Done THEN
+			moveAbsNewY.Execute:= FALSE;
+			iState :=  141;
+			END_IF
+			
+	141:	SCL.Crtl := 'P'; //Move Up
+			SCL.bSend := TRUE;
+			istate := 142;
+			
+	142:	IF NOT SCL.bSendBusy THEN
+			SCL.bSend := FALSE;
+			SCL.Crtl := '';
+			istate := 143;
+		END_IF
+
+	143:	IF waitToLongForRespond.Q THEN
+				istate := 141;
+			END_IF
+			IF respondP.Q1 THEN
+				respondP.RESET := TRUE;
+				respondP.SET1 := FALSE;
+				bLoaded := FALSE;
+				cycleFinished :=TRUE;
+				iState := 145;
+			END_IF	
+			
+	145:	SCL.Crtl := 'H'; // Home pos anfahren
+			SCL.bSend := TRUE;
+			iState :=  150;
+		
+	150:	IF NOT SCL.bSendBusy THEN
+				SCL.bSend := FALSE;
+				SCL.Crtl := '';
+				istate := 155;
+			END_IF
+
+ 	155:	moveAbsY.Velocity := posHomeVelocityY;
+				moveAbsY.Position := posHomeY;
+				moveAbsY.Execute := TRUE;
+
+			IF posAxisY.Position > posPrepositioningY THEN
+				moveAbsX.Velocity := posHomeVelocityX;
+				moveAbsX.Position := posHomeX;
+				moveAbsX.Execute := TRUE;
+				iState :=  160;
+			END_IF
+		
+	160:	IF waitToLongForRespond.Q THEN
+				istate := 145;
+			END_IF
+			IF 	moveAbsX.Done AND moveAbsY.Done AND respondH.Q1 THEN
+			moveAbsX.Execute:= FALSE;
+			moveAbsY.Execute:= FALSE;
+			respondH.RESET := TRUE;
+			respondH.SET1 := FALSE;
+			iState :=  26;
+		END_IF
+		
+	END_CASE
+	
+	resetErrorHandling();
+	visu();
+\end{lstlisting}
+\subsection{Error and Reset}
+
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Error and Reset]
+VAR
+	reset: INT := 0; //reset state machine
+END_VAR
+
+VAR CONSTANT 
+	toMuchForcePositive : INT := 15000;
+	toMuchForceNegative : INT := -15000;
+END_VAR
+
+respondD(SET1:= , RESET:= , Q1=> );
+respondH(SET1:= , RESET:= , Q1=> );
+respondI(SET1:= , RESET:= , Q1=> );
+respondP(SET1:= , RESET:= , Q1=> );
+respondOk(SET1:= , RESET:= , Q1=> );
+respondStartetUp(SET1:= , RESET:= , Q1=> );
+emergencyStopToMuchForce(SET1:= , RESET:= , Q1=> );
+motorXYNoPower(SET1:= , RESET:= , Q1=> );
+errorNoSignalFromUc(SET1:= , RESET:= , Q1=> );
+unequalLoadThanExpected(SET1:= , RESET:= , Q1=> );
+zAxisNotMoving(SET1:= , RESET:= , Q1=> );
+
+rTrigStartViewPressed(CLK:= bStartViewPressed , Q=> );
+
+IF respondI.Q1 THEN
+		respondI.SET1 := FALSE;
+END_IF
+
+respondD.RESET := FALSE;
+respondH.RESET := FALSE;
+respondI.RESET := FALSE;
+respondP.RESET := FALSE;
+respondOK.RESET := FALSE;
+respondStartetUp.RESET := FALSE;
+emergencyStopToMuchForce.RESET := FALSE;
+motorXYNoPower.RESET := FALSE;
+errorNoSignalFromUc.RESET := FALSE;
+unequalLoadThanExpected.RESET := FALSE;
+zAxisNotMoving.RESET:=FALSE;
+
+(*read status from x and y*)
+readInfoAxisX(Axis:= axisX, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , ErrorStop=> , Disabled=> , Stopping=> , StandStill=> , DiscreteMotion=> , ContinuousMotion=> , SynchronizedMotion=> , Homing=> , ConstantVelocity=> , Accelerating=> , Decelerating=> , Status=> );
+readInfoAxisY(Axis:= axisY, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , ErrorStop=> , Disabled=> , Stopping=> , StandStill=> , DiscreteMotion=> , ContinuousMotion=> , SynchronizedMotion=> , Homing=> , ConstantVelocity=> , Accelerating=> , Decelerating=> , Status=> );
+
+(* wait to seconds to give the stepper motor drivers a little time to built DC link*)
+waitWithEnable(IN:= bEmergencyPressed, PT:= T#2S, Q=> , ET=> );
+
+(* if no respond from the uC in a little time, the nsend command again*)
+waitToLongForRespond(IN:= 	iState = 33  OR iState = 143 OR iState =3 OR iState = 30, PT:= T#10S, Q=> , ET=> );
+
+zAxisNotMoving.SET1:= (globalErrorFromUC = '2E');
+
+(* Ungleich soll beladung *)
+IF (iState = 23 OR iState = 0) AND ((acutalForceValue > -200 AND bLoaded) OR (acutalForceValue < -700 AND NOT bLoaded))THEN
+	unequalLoadThanExpected.SET1:=TRUE;
+END_IF
+
+(* error if no respond from uC*)
+errorNoSignalFromUc.SET1 := NOT noSiganlFromU.Q;
+
+(* trigger after restart from emergency *)
+fTrigReset(CLK:= waitWithEnable.Q, Q=> );
+
+(* set if we ar not homed*)
+NotHomed(SET1:= NOT readInfoAxisX.Status.Homed OR NOT readInfoAxisY.Status.Homed, RESET:= , Q1=> );
+motorXYNoPower.SET1 :=  readInfoAxisY.ErrorStop OR readInfoAxisX.ErrorStop;
+(* Status not ok but Emergency is ok*)
+globalErrorDetect := motorXYNoPower.Q1 OR respondStartetUp.Q1 OR emergencyStopToMuchForce.Q1 OR bEmergencyPressed OR errorNoSignalFromUc.Q1 OR unequalLoadThanExpected.Q1 OR zAxisNotMoving.Q1;
+(* set error *)
+setError(SET1:=globalErrorDetect, RESET:= , Q1=> );
+
+CASE reset OF
+0:	IF fTrigReset.Q OR ((setError.Q1 OR NotHomed.SET1) AND (bReset OR rTrigStartViewPressed.Q)) THEN
+		reset := 5;
+		iState := 0;
+		bEnable := FALSE;
+		globalErrorDetect := FALSE;
+		setError.RESET :=TRUE;
+		respondStartetUp.RESET := TRUE;
+		bLoaded := FALSE;
+		respondStartetUp.SET1 := FALSE;
+		emergencyStopToMuchForce.RESET := TRUE;
+		emergencyStopToMuchForce.SET1 := FALSE;
+		motorXYNoPower.SET1 := FALSE;
+		motorXYNoPower.RESET := TRUE;
+		errorNoSignalFromUc.SET1 := FALSE;
+		errorNoSignalFromUc.RESET := TRUE;
+		unequalLoadThanExpected.SET1:= FALSE;
+		unequalLoadThanExpected.RESET := TRUE;
+		zAxisNotMoving.SET1 := FALSE;
+		zAxisNotMoving.RESET := TRUE;
+		respondI.RESET := TRUE;
+		respondI.SET1 := FALSE;
+		respondD.RESET := TRUE;
+		respondD.SET1 := FALSE;
+		respondH.RESET := TRUE;
+		respondH.SET1 := FALSE;
+		maxForceValuePos := 0;
+		maxForceValueNeg := 0;
+	END_IF
+5:	resetX.Execute :=TRUE;
+	resetY.Execute :=TRUE;
+	setError.RESET :=FALSE;
+	reset := 10;
+	
+10:	IF resetX.Done AND resetY.Done THEN
+		resetX.Execute := FALSE;
+		resetY.Execute := FALSE;
+		reset :=  15;
+	END_IF
+15: bEnable := TRUE;
+	reset  := 0;
+END_CASE
+
+(* if to much force --> emergency stop!*)
+IF (acutalForceValue > toMuchForcePositive) OR (acutalForceValue < toMuchForceNegative) THEN
+	emergencyStopToMuchForce.SET1 := TRUE;
+END_IF
+
+
+
+(*reset all movements and sending*)
+IF setError.Q1 THEN
+	iState := 0;
+	homeX.Execute := FALSE;
+	homeY.Execute := FALSE;
+	moveAbsX.Execute:= FALSE;
+	moveAbsY.Execute:= FALSE;
+	moveAbsNewY.Execute:= FALSE;
+	bEnable := FALSE;
+	SCL.bSend := FALSE;
+	SCL.Crtl := '';
+END_IF
+
+\begin{lstlisting}[language=pascal]
+\end{lstlisting}
+
+
+
+\subsection{Serial Com}
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Serial Communication]
+VAR_INPUT
+	Crtl: STRING;
+	bSend: BOOL;
+END_VAR
+VAR_OUTPUT
+	ReceivedString: STRING;
+	bNewString: BOOL;
+	bSendBusy: BOOL;
+	bStringReceived: BOOL;
+END_VAR
+(*VAR_IN_OUT
+	IOrespondOfORder: STRING;
+END_VAR*)
+VAR
+	//DataIn AT %I*: EL6inData22B;
+	//DataOut AT %Q*: EL6outData22B;
+	SerialLineCtrl: SerialLineControl;
+	//BuffTX: ComBuffer;
+	//BuffRX: ComBuffer;
+	clearbuff: ClearComBuffer;
+	SendString: SendString;
+	RecString: ReceiveString;
+	istate: INT;
+	rtrig: r_trig;
+	test: ReceiveByte;
+	bTest: BYTE;
+	bByteReceived : BOOL := FALSE;
+	bBuffer: BYTE;
+	arrForceValues : ARRAY [1..1000] OF INT;
+
+	lengtOfReceivedString: INT;
+	strTemp : STRING(255);
+	posSuffix: INT;
+	stest :STRING;
+	
+	posFirstSlash: INT;
+	posSecondSlash: INT;
+	posThirdSlash: INT;
+	posHash: INT;
+END_VAR
+
+
+SendString(SendString:= , Busy=> , Error=> , TXbuffer:= BuffTX);
+RecString(Prefix:= , Suffix:= '$N', Timeout:= T#2S, Reset:= , StringReceived=> , 	Busy=> , 	Error=> , 	RxTimeout=> , 	ReceivedString:= ReceivedString, 	RXbuffer:= BuffRX);
+posHash := FIND (ReceivedString,'#');
+posSuffix := FIND (ReceivedString,'$R');
+posFirstSlash := FIND (ReceivedString,'/');
+strTemp := MID (ReceivedString,posSuffix - posFirstSlash-1,posFirstSlash+1);
+posSecondSlash := FIND (strTemp,'/') + posFirstSlash;
+strTemp := MID (ReceivedString,posSuffix - posSecondSlash-1,posSecondSlash+1);
+posThirdSlash := FIND (strTemp,'/') + posSecondSlash;
+
+lengtOfReceivedString:=LEN(STR:= ReceivedString);
+
+IF RecString.StringReceived THEN
+	strTemp := MID (ReceivedString,posSecondSlash - posHash-1,posHash+1);
+	acutalForceValue := STRING_TO_INT (strTemp);
+	
+	strTemp := MID (ReceivedString,posThirdSlash - posSecondSlash-1,posSecondSlash+1);
+	posAxisZ := STRING_TO_INT (strTemp);
+
+	globalErrorFromUC := MID (ReceivedString,posSuffix - posThirdSlash-1,posThirdSlash+1);
+	
+	globalForceValueArrived := TRUE;
+	RecString.Reset := TRUE;
+
+	respondOfORder := MID (ReceivedString,posFirstSlash-1,1); (* else its a respond of the Order*)
+	RecString.Reset := TRUE;
+	respondI.SET1 := respondOfORder = 'i';
+	respondH.SET1 := respondOfORder = 'h';
+	respondD.SET1 := respondOfORder = 'd';
+	respondP.SET1 := respondOfORder = 'p';
+	respondOK.SET1 := respondOfORder = 'ok';
+	respondStartetUp.SET1 :=  respondOfORder  = 'Started up';
+	respondOfORder := '';
+	counterSerialCom := counterSerialCom+1;
+END_IF
+
+
+(* no isgnal from uC *)
+noSiganlFromU(IN:= RecString.StringReceived, PT:= T#2S, Q=> , ET=> );
+
+
+rtrig(CLK:= bSend, Q=> );
+CASE istate OF
+
+0:	RecString.Reset := FALSE;
+	bStringReceived := FALSE;
+	IF rtrig.Q THEN
+		SendString.SendString := Crtl;
+		bSendBusy := TRUE;
+		istate := istate  + 1;
+	END_IF	
+
+1:	IF NOT SendString.Busy THEN
+			SendString.SendString := '';
+			(*clearbuff(Buffer:= BuffTX );*)
+			istate := istate + 1;
+			ReceivedString := '';
+			bSendBusy := FALSE;
+	END_IF
+
+2:	IF RecString.StringReceived THEN
+		bStringReceived := TRUE;
+		RecString.Reset := TRUE;
+		istate := 0;
+	END_IF
+		
+END_CASE
+
+
+\end{lstlisting}
+
+\subsection{Visualization}
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Visualization]
+VAR
+	//stringErrorText : WSTRING; //error texts for visu
+	//stringMessageText : WSTRING;
+	//stringDebugText : WSTRING;
+	stringErrorText: ARRAY [1..20] OF STRING;
+	stringMessageText: ARRAY [1..20] OF STRING;
+	stringDebugText: ARRAY [1..20] OF STRING;
+	forceMemoryDrop: writeInArray;
+	forceMemoryPick: writeInArray;
+	zaehl: INT := 1;
+END_VAR
+
+forceMemoryDrop(i_iState:= iState, i_actualForceValue:= acutalForceValue, i_bLoaded:= TRUE, io_ValueArrived:= globalForceValueArrived);
+forceMemoryPick(i_iState:= iState, i_actualForceValue:= acutalForceValue, i_bLoaded:= FALSE, io_ValueArrived:= globalForceValueArrived);
+//cycleFinished(SET1:= , RESET:= , Q1=> );
+
+(* pos of x and y for the visu*)
+IF readInfoAxisX.Status.Homed AND readInfoAxisY.Status.Homed	THEN
+realVisuPosX := posAxisX.Position * 1.5;
+realVisuPosY := (posAxisY.Position * (-1.0) + 10) *1.7;
+//realVisuPosX := ABS (realVisuPosX);
+ELSE
+realVisuPosX := 0.0;
+realVisuPosY := 0.0;	
+END_IF
+
+IF bLoaded THEN
+	realVisuDiskX := realVisuPosX; (* - posRepositoryX * 1.5;*)
+	realVisuDiskY := realVisuPosY; (*- (posRepositoryY * (-1.0) + 10) *2.0;	*)
+ELSE
+	realVisuDiskX := posRepositoryX * 1.5;
+	realVisuDiskY := (posRepositoryY * (-1.0) + 10) *2.0;
+END_IF
+
+IF iState > 3 THEN
+intVisuPosZ := (posAxisZ) *2;
+ELSE
+intVisuPosZ := 0;	
+END_IF
+
+(*prepare cycle finished*)
+
+(* visu texts *)
+
+MEMSET(ADR(stringErrorText), 0, SIZEOF(stringErrorText));
+MEMSET(ADR(stringMessageText), 0, SIZEOF(stringMessageText));
+MEMSET(ADR(stringDebugText), 0, SIZEOF(stringDebugText));
+
+zaehl := 1;
+(* error messages *)
+IF NOT readInfoAxisX.Status.Homed OR NOT readInfoAxisY.Status.Homed THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Not referenced in X/Y');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  globalErrorDetect THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Failure');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  bEmergencyPressed THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Emergency Stop');
+	zaehl := zaehl + 1;
+END_IF
+
+IF  emergencyStopToMuchForce.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'too much Force');
+	zaehl := zaehl + 1;
+END_IF
+
+IF motorXYNoPower.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'Not referenced in X/Y');	
+	zaehl := zaehl + 1;
+END_IF
+
+IF errorNoSignalFromUc.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'error connection lost to uC');
+	zaehl := zaehl + 1;
+END_IF
+
+IF unequalLoadThanExpected.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'load unequal than expected');	
+	zaehl := zaehl + 1;
+END_IF
+
+IF zAxisNotMoving.Q1 THEN
+	stringErrorText[zaehl]:= CONCAT(STR1:= stringErrorText[zaehl], STR2:= 'z-axis Error');	
+	zaehl := zaehl + 1;
+END_IF
+
+(* massage textes *)
+	zaehl := 1;
+IF acutalForceValue > -200  THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'The object is successfully dropped');
+	zaehl := zaehl + 1;
+END_IF
+
+IF acutalForceValue < -700 THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'The object is successfully grabbed');
+	zaehl := zaehl + 1;
+END_IF
+
+
+IF iState = 26 AND cycleFinished THEN
+	stringMessageText[zaehl]:= CONCAT(STR1:= stringMessageText[zaehl], STR2:= 'Cycle successfully finished');
+	zaehl := zaehl + 1;
+END_IF
+
+(* debug messages *)
+	zaehl := 1;
+IF bLoaded THEN	
+	stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'Load');
+	zaehl := zaehl + 1;
+ELSE
+	stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'No Load');
+	zaehl := zaehl + 1;
+END_IF
+
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'State PLC: ');
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= INT_TO_STRING (iState));
+zaehl := zaehl + 1;
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= 'Error from uC:');
+stringDebugText[zaehl]:= CONCAT(STR1:= stringDebugText[zaehl], STR2:= globalErrorFromUC);
+zaehl := zaehl + 1;
+
+\end{lstlisting}
+
+\subsection{Write in Array}
+\begin{lstlisting}[language=pascal, captionpos=t, caption=Write in Array]
+VAR CONSTANT 
+	BufStart:INT:=  1;      // Start-Index
+ 	BufEnd:INT:=  100;   // End-Index
+END_VAR
+
+VAR_INPUT
+	i_iState : INT;
+	i_actualForceValue : INT;
+	i_bLoaded : BOOL;
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR
+	sTemp : INT;
+	sArrForceValue: ARRAY [BufStart..BufEnd] OF INT;
+END_VAR
+
+VAR_IN_OUT
+	io_ValueArrived : BOOL;
+END_VAR
+
+
+IF io_ValueArrived AND ((NOT i_bLoaded AND (iState = 33) AND (posAxisZ > 60 )) OR (i_bLoaded AND (iState = 143) AND (posAxisZ > 57 ))) THEN
+		sTemp := sTemp + 1;
+		IF sTemp > BufEnd THEN
+			sTemp:=1;
+		END_IF
+		sArrForceValue[sTemp] := i_actualForceValue;
+		io_ValueArrived := FALSE;		
+	END_IF
+	
+	IF	(((i_iState = 27 AND NOT i_bLoaded) OR (i_iState = 125 AND i_bLoaded)) ) THEN //delet Buffer Begin from new
+		MEMSET(ADR(sArrForceValue), 0, SIZEOF(sArrForceValue));
+		sTemp:=1;
+	END_IF
+
+\end{lstlisting}

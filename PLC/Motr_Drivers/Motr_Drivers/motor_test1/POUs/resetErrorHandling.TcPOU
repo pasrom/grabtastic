@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.2">
+  <POU Name="resetErrorHandling" Id="{0bb6ac42-4f44-4577-bdc0-442253dab241}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM resetErrorHandling
+VAR
+	reset: INT := 0; //reset state machine
+END_VAR
+
+VAR CONSTANT 
+	toMuchForcePositive : INT := 15000;
+	toMuchForceNegative : INT := -15000;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[respondD(SET1:= , RESET:= , Q1=> );
+respondH(SET1:= , RESET:= , Q1=> );
+respondI(SET1:= , RESET:= , Q1=> );
+respondP(SET1:= , RESET:= , Q1=> );
+respondOk(SET1:= , RESET:= , Q1=> );
+respondStartetUp(SET1:= , RESET:= , Q1=> );
+emergencyStopToMuchForce(SET1:= , RESET:= , Q1=> );
+motorXYNoPower(SET1:= , RESET:= , Q1=> );
+errorNoSignalFromUc(SET1:= , RESET:= , Q1=> );
+unequalLoadThanExpected(SET1:= , RESET:= , Q1=> );
+zAxisNotMoving(SET1:= , RESET:= , Q1=> );
+
+rTrigStartViewPressed(CLK:= bStartViewPressed , Q=> );
+
+IF respondI.Q1 THEN
+		respondI.SET1 := FALSE;
+END_IF
+
+respondD.RESET := FALSE;
+respondH.RESET := FALSE;
+respondI.RESET := FALSE;
+respondP.RESET := FALSE;
+respondOK.RESET := FALSE;
+respondStartetUp.RESET := FALSE;
+emergencyStopToMuchForce.RESET := FALSE;
+motorXYNoPower.RESET := FALSE;
+errorNoSignalFromUc.RESET := FALSE;
+unequalLoadThanExpected.RESET := FALSE;
+zAxisNotMoving.RESET:=FALSE;
+
+(*read status from x and y*)
+readInfoAxisX(Axis:= axisX, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , ErrorStop=> , Disabled=> , Stopping=> , StandStill=> , DiscreteMotion=> , ContinuousMotion=> , SynchronizedMotion=> , Homing=> , ConstantVelocity=> , Accelerating=> , Decelerating=> , Status=> );
+readInfoAxisY(Axis:= axisY, Enable:= TRUE, Valid=> , Busy=> , Error=> , ErrorID=> , ErrorStop=> , Disabled=> , Stopping=> , StandStill=> , DiscreteMotion=> , ContinuousMotion=> , SynchronizedMotion=> , Homing=> , ConstantVelocity=> , Accelerating=> , Decelerating=> , Status=> );
+
+(* wait to seconds to give the stepper motor drivers a little time to built DC link*)
+waitWithEnable(IN:= bEmergencyPressed, PT:= T#2S, Q=> , ET=> );
+
+(* if no respond from the uC in a little time, the nsend command again*)
+waitToLongForRespond(IN:= 	iState = 33  OR iState = 143 OR iState =3 OR iState = 30, PT:= T#10S, Q=> , ET=> );
+
+zAxisNotMoving.SET1:= (globalErrorFromUC = '2E');
+
+(* Ungleich soll beladung *)
+IF (iState = 26 OR iState = 0) AND ((acutalForceValue > -200 AND bLoaded) OR (acutalForceValue < -700 AND NOT bLoaded))THEN
+	unequalLoadThanExpected.SET1:=TRUE;
+END_IF
+
+(* error if no respond from uC*)
+errorNoSignalFromUc.SET1 := NOT noSiganlFromU.Q;
+
+(* trigger after restart from emergency *)
+fTrigReset(CLK:= waitWithEnable.Q, Q=> );
+
+(* set if we ar not homed*)
+NotHomed(SET1:= NOT readInfoAxisX.Status.Homed OR NOT readInfoAxisY.Status.Homed, RESET:= , Q1=> );
+motorXYNoPower.SET1 :=  readInfoAxisY.ErrorStop OR readInfoAxisX.ErrorStop;
+(* Status not ok but Emergency is ok*)
+globalErrorDetect := motorXYNoPower.Q1 OR respondStartetUp.Q1 OR emergencyStopToMuchForce.Q1 OR bEmergencyPressed OR errorNoSignalFromUc.Q1 OR unequalLoadThanExpected.Q1 OR zAxisNotMoving.Q1;
+(* set error *)
+setError(SET1:=globalErrorDetect, RESET:= , Q1=> );
+
+CASE reset OF
+0:	IF fTrigReset.Q OR ((setError.Q1 OR NotHomed.SET1) AND (bReset OR rTrigStartViewPressed.Q)) THEN
+		reset := 5;
+		iState := 0;
+		bEnable := FALSE;
+		globalErrorDetect := FALSE;
+		setError.RESET :=TRUE;
+		respondStartetUp.RESET := TRUE;
+		bLoaded := FALSE;
+		respondStartetUp.SET1 := FALSE;
+		emergencyStopToMuchForce.RESET := TRUE;
+		emergencyStopToMuchForce.SET1 := FALSE;
+		motorXYNoPower.SET1 := FALSE;
+		motorXYNoPower.RESET := TRUE;
+		errorNoSignalFromUc.SET1 := FALSE;
+		errorNoSignalFromUc.RESET := TRUE;
+		unequalLoadThanExpected.SET1:= FALSE;
+		unequalLoadThanExpected.RESET := TRUE;
+		zAxisNotMoving.SET1 := FALSE;
+		zAxisNotMoving.RESET := TRUE;
+		respondI.RESET := TRUE;
+		respondI.SET1 := FALSE;
+		respondD.RESET := TRUE;
+		respondD.SET1 := FALSE;
+		respondH.RESET := TRUE;
+		respondH.SET1 := FALSE;
+		maxForceValuePos := 0;
+		maxForceValueNeg := 0;
+	END_IF
+5:	resetX.Execute :=TRUE;
+	resetY.Execute :=TRUE;
+	setError.RESET :=FALSE;
+	reset := 10;
+	
+10:	IF resetX.Done AND resetY.Done THEN
+		resetX.Execute := FALSE;
+		resetY.Execute := FALSE;
+		reset :=  15;
+	END_IF
+15: bEnable := TRUE;
+	reset  := 0;
+END_CASE
+
+(* if to much force --> emergency stop!*)
+IF (acutalForceValue > toMuchForcePositive) OR (acutalForceValue < toMuchForceNegative) THEN
+	emergencyStopToMuchForce.SET1 := TRUE;
+END_IF
+
+
+
+(*reset all movements and sending*)
+IF setError.Q1 THEN
+	iState := 0;
+	homeX.Execute := FALSE;
+	homeY.Execute := FALSE;
+	moveAbsX.Execute:= FALSE;
+	moveAbsY.Execute:= FALSE;
+	moveAbsNewY.Execute:= FALSE;
+	bEnable := FALSE;
+	SCL.bSend := FALSE;
+	SCL.Crtl := '';
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

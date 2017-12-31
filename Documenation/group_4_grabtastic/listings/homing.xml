@@ -1,0 +1,20 @@
+	15: IF NOT readInfoAxisX.Status.Homed or NOT readInfoAxisY.Status.Homed THEN
+		homeX.Execute := TRUE;
+		homeY.Execute := TRUE;
+		iState := 20;
+		ELSE
+			iState := 21; //--> if already referenced, go home position
+		END_IF
+	20:	IF homeX.Done AND homeY.Done THEN
+			homeX.Execute := FALSE;
+			homeY.Execute := FALSE;
+			NotHomed.RESET := FALSE;
+			iState := 21;		
+		END_IF
+	21:		moveAbsX.Velocity := posHomeVelocityX;
+			moveAbsX.Position := posHomeX;
+			moveAbsX.Execute := TRUE;
+			moveAbsY.Velocity := posHomeVelocityY;
+			moveAbsY.Position := posHomeY;
+			moveAbsY.Execute := TRUE;
+			iState :=  22;

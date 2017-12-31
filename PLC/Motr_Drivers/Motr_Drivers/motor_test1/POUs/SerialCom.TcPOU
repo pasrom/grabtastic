@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <POU Name="SerialCom" Id="{3b02a49e-dff9-4aef-9963-c418517382a2}">
+    <Declaration><![CDATA[FUNCTION_BLOCK SerialCom
+VAR_INPUT
+	Crtl: STRING;
+	bSend: BOOL;
+END_VAR
+VAR_OUTPUT
+	ReceivedString: STRING;
+	bNewString: BOOL;
+	bSendBusy: BOOL;
+	bStringReceived: BOOL;
+END_VAR
+(*VAR_IN_OUT
+	IOrespondOfORder: STRING;
+END_VAR*)
+VAR
+	//DataIn AT %I*: EL6inData22B;
+	//DataOut AT %Q*: EL6outData22B;
+	SerialLineCtrl: SerialLineControl;
+	//BuffTX: ComBuffer;
+	//BuffRX: ComBuffer;
+	clearbuff: ClearComBuffer;
+	SendString: SendString;
+	RecString: ReceiveString;
+	istate: INT;
+	rtrig: r_trig;
+	test: ReceiveByte;
+	bTest: BYTE;
+	bByteReceived : BOOL := FALSE;
+	bBuffer: BYTE;
+	arrForceValues : ARRAY [1..1000] OF INT;
+
+	lengtOfReceivedString: INT;
+	strTemp : STRING(255);
+	posSuffix: INT;
+	stest :STRING;
+	
+	posFirstSlash: INT;
+	posSecondSlash: INT;
+	posThirdSlash: INT;
+	posHash: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SendString(SendString:= , Busy=> , Error=> , TXbuffer:= BuffTX);
+RecString(Prefix:= , Suffix:= '$N', Timeout:= T#2S, Reset:= , StringReceived=> , 	Busy=> , 	Error=> , 	RxTimeout=> , 	ReceivedString:= ReceivedString, 	RXbuffer:= BuffRX);
+posHash := FIND (ReceivedString,'#');
+posSuffix := FIND (ReceivedString,'$R');
+posFirstSlash := FIND (ReceivedString,'/');
+strTemp := MID (ReceivedString,posSuffix - posFirstSlash-1,posFirstSlash+1);
+posSecondSlash := FIND (strTemp,'/') + posFirstSlash;
+strTemp := MID (ReceivedString,posSuffix - posSecondSlash-1,posSecondSlash+1);
+posThirdSlash := FIND (strTemp,'/') + posSecondSlash;
+
+lengtOfReceivedString:=LEN(STR:= ReceivedString);
+
+IF RecString.StringReceived THEN
+	strTemp := MID (ReceivedString,posSecondSlash - posHash-1,posHash+1);
+	acutalForceValue := STRING_TO_INT (strTemp);
+	
+	strTemp := MID (ReceivedString,posThirdSlash - posSecondSlash-1,posSecondSlash+1);
+	posAxisZ := STRING_TO_INT (strTemp);
+
+	globalErrorFromUC := MID (ReceivedString,posSuffix - posThirdSlash-1,posThirdSlash+1);
+	
+	globalForceValueArrived := TRUE;
+	RecString.Reset := TRUE;
+
+	respondOfORder := MID (ReceivedString,posFirstSlash-1,1); (* else its a respond of the Order*)
+	RecString.Reset := TRUE;
+	respondI.SET1 := respondOfORder = 'i';
+	respondH.SET1 := respondOfORder = 'h';
+	respondD.SET1 := respondOfORder = 'd';
+	respondP.SET1 := respondOfORder = 'p';
+	respondOK.SET1 := respondOfORder = 'ok';
+	respondStartetUp.SET1 :=  respondOfORder  = 'Started up';
+	respondOfORder := '';
+	counterSerialCom := counterSerialCom+1;
+END_IF
+
+
+(* no isgnal from uC *)
+noSiganlFromU(IN:= RecString.StringReceived, PT:= T#2S, Q=> , ET=> );
+
+
+rtrig(CLK:= bSend, Q=> );
+CASE istate OF
+
+0:	RecString.Reset := FALSE;
+	bStringReceived := FALSE;
+	IF rtrig.Q THEN
+		SendString.SendString := Crtl;
+		bSendBusy := TRUE;
+		istate := istate  + 1;
+	END_IF	
+
+1:	IF NOT SendString.Busy THEN
+			SendString.SendString := '';
+			(*clearbuff(Buffer:= BuffTX );*)
+			istate := istate + 1;
+			ReceivedString := '';
+			bSendBusy := FALSE;
+	END_IF
+
+2:	IF RecString.StringReceived THEN
+		bStringReceived := TRUE;
+		RecString.Reset := TRUE;
+		istate := 0;
+	END_IF
+		
+END_CASE
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <ObjectProperties />
+  </POU>
+</TcPlcObject>

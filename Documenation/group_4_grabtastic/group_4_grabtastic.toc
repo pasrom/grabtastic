@@ -1,0 +1,116 @@
+\select@language {english}
+\contentsline {chapter}{List of Figures}{V}{section*.5}
+\contentsline {chapter}{List of Tables}{VII}{section*.7}
+\contentsline {chapter}{Listings}{VII}{chapter*.8}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Purpose}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Scope}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}Overview}{2}{section.1.3}
+\contentsline {section}{\numberline {1.4}References}{2}{section.1.4}
+\contentsline {section}{\numberline {1.5}Division of the Tasks}{2}{section.1.5}
+\contentsline {chapter}{\numberline {2}System Description}{4}{chapter.2}
+\contentsline {section}{\numberline {2.1}Product Overview}{4}{section.2.1}
+\contentsline {section}{\numberline {2.2}System Overview}{5}{section.2.2}
+\contentsline {chapter}{\numberline {3}Mechanical Components}{7}{chapter.3}
+\contentsline {section}{\numberline {3.1}\acs {Repository}}{7}{section.3.1}
+\contentsline {section}{\numberline {3.2}Z-Axis}{8}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Frame}{8}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Mounters for linear Axis and Limit Switch}{9}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Mounter for Electrical Boards}{9}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Rackbar}{10}{subsection.3.2.4}
+\contentsline {subsection}{\numberline {3.2.5}Motor Frame}{11}{subsection.3.2.5}
+\contentsline {section}{\numberline {3.3}Mechanical Assembly}{11}{section.3.3}
+\contentsline {section}{\numberline {3.4}Snap Connection}{13}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Calculation of the Forces}{13}{subsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.1.1}Calculation of the Force for Grab Cycle}{14}{subsubsection.3.4.1.1}
+\contentsline {subsubsection}{\numberline {3.4.1.2}Calculation for the Drop Cycle}{15}{subsubsection.3.4.1.2}
+\contentsline {subsection}{\numberline {3.4.2}\acs {FEA}}{16}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Analysis of the Simulation for the Displacement}{18}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Analysis of the Simulation for the Stresses}{19}{subsection.3.4.4}
+\contentsline {chapter}{\numberline {4}Electronic Components}{21}{chapter.4}
+\contentsline {section}{\numberline {4.1}System Overview}{21}{section.4.1}
+\contentsline {section}{\numberline {4.2}Linear Voltage Regulator}{21}{section.4.2}
+\contentsline {section}{\numberline {4.3}Schematic}{21}{section.4.3}
+\contentsline {section}{\numberline {4.4}Calculation}{22}{section.4.4}
+\contentsline {section}{\numberline {4.5}Measurements}{22}{section.4.5}
+\contentsline {section}{\numberline {4.6}Amplifier Circuit}{22}{section.4.6}
+\contentsline {subsection}{\numberline {4.6.1}Description}{22}{subsection.4.6.1}
+\contentsline {subsection}{\numberline {4.6.2}Schematic}{23}{subsection.4.6.2}
+\contentsline {subsection}{\numberline {4.6.3}Calculation}{23}{subsection.4.6.3}
+\contentsline {subsection}{\numberline {4.6.4}Layout}{24}{subsection.4.6.4}
+\contentsline {subsection}{\numberline {4.6.5}Measurement}{24}{subsection.4.6.5}
+\contentsline {section}{\numberline {4.7}\acs {RS232} Circuit}{25}{section.4.7}
+\contentsline {subsection}{\numberline {4.7.1}Description}{25}{subsection.4.7.1}
+\contentsline {subsection}{\numberline {4.7.2}Schematic}{25}{subsection.4.7.2}
+\contentsline {subsection}{\numberline {4.7.3}Measurement}{26}{subsection.4.7.3}
+\contentsline {subsection}{\numberline {4.7.4}Layout}{26}{subsection.4.7.4}
+\contentsline {section}{\numberline {4.8}DRV8711 Circuit}{26}{section.4.8}
+\contentsline {subsection}{\numberline {4.8.1}Description}{26}{subsection.4.8.1}
+\contentsline {subsection}{\numberline {4.8.2}Schematic}{27}{subsection.4.8.2}
+\contentsline {subsection}{\numberline {4.8.3}Calculation}{29}{subsection.4.8.3}
+\contentsline {subsubsection}{\numberline {4.8.3.1}Power Consumption of Sense Resistors}{29}{subsubsection.4.8.3.1}
+\contentsline {subsubsection}{\numberline {4.8.3.2}Drive Current}{29}{subsubsection.4.8.3.2}
+\contentsline {subsubsection}{\numberline {4.8.3.3}Maximum allowed Drive Current}{29}{subsubsection.4.8.3.3}
+\contentsline {subsection}{\numberline {4.8.4}Measurements}{30}{subsection.4.8.4}
+\contentsline {section}{\numberline {4.9}Emergency Stop and limit Switch Circuit}{33}{section.4.9}
+\contentsline {subsection}{\numberline {4.9.1}Description}{33}{subsection.4.9.1}
+\contentsline {subsection}{\numberline {4.9.2}Measurement}{33}{subsection.4.9.2}
+\contentsline {subsection}{\numberline {4.9.3}Schematic}{34}{subsection.4.9.3}
+\contentsline {section}{\numberline {4.10}Bill of materials}{35}{section.4.10}
+\contentsline {section}{\numberline {4.11}\acs {PCB} layout}{36}{section.4.11}
+\contentsline {chapter}{\numberline {5}\acs {PLC}-Program}{39}{chapter.5}
+\contentsline {section}{\numberline {5.1}Main Program}{39}{section.5.1}
+\contentsline {section}{\numberline {5.2}Error Procedure}{42}{section.5.2}
+\contentsline {section}{\numberline {5.3}\acs {HMI}}{42}{section.5.3}
+\contentsline {chapter}{\numberline {6}Communication \acs {PLC} - \acs {uC}}{44}{chapter.6}
+\contentsline {section}{\numberline {6.1}Configuration of \acs {RS232}}{44}{section.6.1}
+\contentsline {section}{\numberline {6.2}Commands \acs {PLC}}{44}{section.6.2}
+\contentsline {section}{\numberline {6.3}Reply \acs {uC}}{44}{section.6.3}
+\contentsline {section}{\numberline {6.4}Telegram from \ac {uC} to \ac {PLC}}{45}{section.6.4}
+\contentsline {section}{\numberline {6.5}Heartbeat}{45}{section.6.5}
+\contentsline {chapter}{\numberline {7}\acs {uC} Program}{46}{chapter.7}
+\contentsline {section}{\numberline {7.1}\acs {ASF} Library}{46}{section.7.1}
+\contentsline {section}{\numberline {7.2}Used pins}{48}{section.7.2}
+\contentsline {section}{\numberline {7.3}Configuration}{49}{section.7.3}
+\contentsline {section}{\numberline {7.4}Calculations}{50}{section.7.4}
+\contentsline {subsection}{\numberline {7.4.1}Sampling Rate of the \acs {ADC}}{50}{subsection.7.4.1}
+\contentsline {subsection}{\numberline {7.4.2}\acs {TC} Frequency}{50}{subsection.7.4.2}
+\contentsline {section}{\numberline {7.5}Main Loop}{50}{section.7.5}
+\contentsline {section}{\numberline {7.6}Programmed Functions}{51}{section.7.6}
+\contentsline {section}{\numberline {7.7}DRV8711 Register Settings}{54}{section.7.7}
+\contentsline {subsection}{\numberline {7.7.1}Configuring Predrivers}{55}{subsection.7.7.1}
+\contentsline {subsection}{\numberline {7.7.2}External \acs {MOSFET}'s calculation}{56}{subsection.7.7.2}
+\contentsline {subsection}{\numberline {7.7.3}Speed Calculation}{56}{subsection.7.7.3}
+\contentsline {subsection}{\numberline {7.7.4}Conclusion DRV8711}{57}{subsection.7.7.4}
+\contentsline {chapter}{\numberline {8}Results}{58}{chapter.8}
+\contentsline {section}{\numberline {8.1}Test runs}{58}{section.8.1}
+\contentsline {section}{\numberline {8.2}Mechanic}{58}{section.8.2}
+\contentsline {section}{\numberline {8.3}Electronic}{62}{section.8.3}
+\contentsline {section}{\numberline {8.4}Force Measurement}{63}{section.8.4}
+\contentsline {chapter}{\numberline {9}Discussion}{65}{chapter.9}
+\contentsline {chapter}{Appendix}{66}{chapter.9}
+\contentsline {chapter}{\numberline {A}Mechanics}{66}{appendix.A}
+\contentsline {section}{\numberline {A.1}Drawings}{66}{section.A.1}
+\contentsline {section}{\numberline {A.2}Linear Axis}{77}{section.A.2}
+\contentsline {chapter}{\numberline {B}Electronics}{80}{appendix.B}
+\contentsline {section}{\numberline {B.1}Power Resistor}{80}{section.B.1}
+\contentsline {section}{\numberline {B.2}DRV8711}{85}{section.B.2}
+\contentsline {section}{\numberline {B.3}\acs {MOSFET} IRF520}{130}{section.B.3}
+\contentsline {section}{\numberline {B.4}Force Sensor}{139}{section.B.4}
+\contentsline {section}{\numberline {B.5}LM1086 Linear Voltage Regulator}{144}{section.B.5}
+\contentsline {section}{\numberline {B.6}MAX232 \acs {RS232} Level Changer}{175}{section.B.6}
+\contentsline {section}{\numberline {B.7}Schrack Relay}{200}{section.B.7}
+\contentsline {chapter}{\numberline {C}\acs {uC}}{204}{appendix.C}
+\contentsline {section}{\numberline {C.1}Main Loop}{204}{section.C.1}
+\contentsline {section}{\numberline {C.2}Library}{205}{section.C.2}
+\contentsline {section}{\numberline {C.3}\acs {ASF} Library}{222}{section.C.3}
+\contentsline {section}{\numberline {C.4}Register Settings Atmel}{222}{section.C.4}
+\contentsline {chapter}{\numberline {D}\acs {PLC}}{223}{appendix.D}
+\contentsline {section}{\numberline {D.1}Program}{223}{section.D.1}
+\contentsline {subsection}{\numberline {D.1.1}Allgemein}{224}{subsection.D.1.1}
+\contentsline {subsection}{\numberline {D.1.2}Main}{224}{subsection.D.1.2}
+\contentsline {subsection}{\numberline {D.1.3}Error and Reset}{228}{subsection.D.1.3}
+\contentsline {subsection}{\numberline {D.1.4}Serial Com}{231}{subsection.D.1.4}
+\contentsline {subsection}{\numberline {D.1.5}Visualization}{232}{subsection.D.1.5}
+\contentsline {subsection}{\numberline {D.1.6}Write in Array}{235}{subsection.D.1.6}
+\contentsline {section}{\numberline {D.2}Datasheets}{236}{section.D.2}
